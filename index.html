@@ -1,163 +1,117 @@
-<!doctype html>
-<html lang="pl">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <title>Language Learning</title>
+  <meta charset="UTF-8">
+  <title>PL & EN Trainer</title>
   <style>
     body {
-      background: #ccc;
       font-family: Arial, sans-serif;
-      margin: 0;
       padding: 20px;
+      background: #f8f9fa;
     }
-    header {
-      display: flex;
-      gap: 10px;
+    h1 {
+      text-align: center;
+    }
+    .task {
       margin-bottom: 20px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    button {
-      padding: 6px 10px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: #eee;
-    }
-    button.active {
-      background: #4287f5;
-      color: white;
-    }
-    .row {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .row span {
-      min-width: 240px;
+    .task-number {
+      font-weight: bold;
+      margin-bottom: 5px;
     }
     input {
       padding: 6px;
-      font-size: 14px;
+      width: 250px;
+      margin-right: 10px;
     }
-    .status {
-      width: 20px;
-      text-align: center;
-      font-size: 18px;
+    button {
+      padding: 6px 10px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .check {
+      background: #007bff;
+      color: white;
     }
     .hint {
-      font-size: 13px;
-      color: #444;
+      background: #6c757d;
+      color: white;
+    }
+    .status {
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    .correct { color: green; }
+    .wrong { color: red; }
+    .hint-text {
+      margin-top: 5px;
+      color: gray;
       font-style: italic;
-      margin-left: 250px;
-      flex-basis: 100%;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <header>
-    <button id="btnPl">PL</button>
-    <button id="btnEn">EN</button>
-    <button id="btnReverse">↔ Reverse</button>
-  </header>
+  <h1>PL & EN Trainer</h1>
 
-  <div id="container"></div>
+  <div class="task" data-answer="kot">
+    <div class="task-number">1.</div>
+    <input type="text" placeholder="Введите перевод">
+    <button class="check">Проверить</button>
+    <button class="hint">Подсказка</button>
+    <span class="status"></span>
+    <div class="hint-text">Ответ: kot</div>
+  </div>
+
+  <div class="task" data-answer="pies">
+    <div class="task-number">2.</div>
+    <input type="text" placeholder="Введите перевод">
+    <button class="check">Проверить</button>
+    <button class="hint">Подсказка</button>
+    <span class="status"></span>
+    <div class="hint-text">Ответ: pies</div>
+  </div>
+
+  <div class="task" data-answer="dom">
+    <div class="task-number">3.</div>
+    <input type="text" placeholder="Введите перевод">
+    <button class="check">Проверить</button>
+    <button class="hint">Подсказка</button>
+    <span class="status"></span>
+    <div class="hint-text">Ответ: dom</div>
+  </div>
 
   <script>
-    let blocks = [];
-    let currentLang = "pl";
-    let reverse = false;
+    document.querySelectorAll(".task").forEach(task => {
+      const input = task.querySelector("input");
+      const checkBtn = task.querySelector(".check");
+      const hintBtn = task.querySelector(".hint");
+      const status = task.querySelector(".status");
+      const hintText = task.querySelector(".hint-text");
+      const answer = task.dataset.answer;
 
-    // load JSON
-    fetch("blocks.json")
-      .then(r => r.json())
-      .then(data => {
-        blocks = data;
-        render();
+      checkBtn.addEventListener("click", () => {
+        if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
+          status.textContent = "✅ Правильно!";
+          status.className = "status correct";
+        } else {
+          status.textContent = "❌ Неправильно";
+          status.className = "status wrong";
+        }
       });
 
-    function render() {
-      const container = document.getElementById("container");
-      container.innerHTML = "";
-
-      blocks.forEach((block, idx) => {
-        const row = document.createElement("div");
-        row.className = "row";
-
-        const text = document.createElement("span");
-        text.textContent = reverse ? block["en"] : block[currentLang];
-        row.appendChild(text);
-
-        const input = document.createElement("input");
-        input.type = "text";
-        row.appendChild(input);
-
-        const btn = document.createElement("button");
-        btn.textContent = "✔";
-        row.appendChild(btn);
-
-        const status = document.createElement("div");
-        status.className = "status";
-        row.appendChild(status);
-
-        const hintBtn = document.createElement("button");
-        hintBtn.textContent = "?";
-        row.appendChild(hintBtn);
-
-        const hint = document.createElement("div");
-        hint.className = "hint";
-        hint.style.display = "none";
-        row.appendChild(hint);
-
-        btn.onclick = () => {
-          const targetLang = reverse ? "pl" : (currentLang === "pl" ? "en" : "pl");
-          const correct = block[targetLang].trim().toLowerCase();
-          const user = input.value.trim().toLowerCase();
-          if (user && user === correct) {
-            status.textContent = "✅";
-          } else {
-            status.textContent = "❌";
-          }
-        };
-
-        input.addEventListener("keydown", e => {
-          if (e.key === "Enter") btn.click();
-        });
-
-        hintBtn.onclick = () => {
-          const targetLang = reverse ? "pl" : (currentLang === "pl" ? "en" : "pl");
-          hint.textContent = "Подсказка: " + block[targetLang];
-          hint.style.display = "block";
-        };
-
-        container.appendChild(row);
+      hintBtn.addEventListener("click", () => {
+        hintText.style.display = (hintText.style.display === "none" || hintText.style.display === "") 
+          ? "block" 
+          : "none";
       });
-    }
-
-    document.getElementById("btnPl").onclick = () => {
-      currentLang = "pl";
-      reverse = false;
-      render();
-      setActive("btnPl");
-    };
-    document.getElementById("btnEn").onclick = () => {
-      currentLang = "en";
-      reverse = false;
-      render();
-      setActive("btnEn");
-    };
-    document.getElementById("btnReverse").onclick = () => {
-      reverse = !reverse;
-      render();
-    };
-
-    function setActive(id) {
-      document.getElementById("btnPl").classList.remove("active");
-      document.getElementById("btnEn").classList.remove("active");
-      document.getElementById(id).classList.add("active");
-    }
-
-    setActive("btnPl");
+    });
   </script>
 </body>
 </html>
