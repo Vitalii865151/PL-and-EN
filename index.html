@@ -9,14 +9,16 @@
     .top { margin-bottom: 8px; }
     .btn { display:inline-block; padding:8px 12px; margin-right:6px; cursor:pointer; border:1px solid #888; border-radius:4px; user-select:none; }
     .btn.active { background:#ddd; box-shadow: inset 0 0 3px rgba(0,0,0,0.2); }
-    .container { height: calc(100vh - 96px); overflow:auto; border-top:1px solid #eee; padding-top:8px; }
-    .row { display:flex; align-items:flex-start; gap:8px; padding:6px; border-bottom:1px solid #f0f0f0; }
-    .text { width:420px; flex:0 0 420px; font-size:14px; white-space:pre-wrap; }
-    .entry { flex: 0 0 260px; font-size:14px; padding:6px; }
+    .container { height: calc(100vh - 140px); overflow:auto; border-top:1px solid #eee; padding-top:8px; }
+    .row { display:flex; align-items:center; gap:8px; padding:6px; border-bottom:1px solid #f0f0f0; }
+    .num { width:40px; text-align:right; font-size:14px; }
+    .text { width:500px; flex:0 0 500px; font-size:14px; white-space:pre-wrap; }
+    .entry { flex:0 0 280px; font-size:14px; padding:6px; }
     .status { width:32px; text-align:center; font-size:18px; }
-    .check { width:36px; height:30px; cursor:pointer; }
+    .check, .hint { width:36px; height:30px; cursor:pointer; }
     .controls { margin-bottom:6px; }
     .save-note { margin-left:12px; font-size:13px; color:#555; }
+    .timer { font-size:16px; margin-left:12px; }
   </style>
 </head>
 <body>
@@ -25,51 +27,63 @@
       <span id="btnPl" class="btn">Polish</span>
       <span id="btnEn" class="btn">English</span>
       <button id="downloadProgress" class="btn">Save progress</button>
-      <span class="save-note">(Browsers cannot overwrite local files. This downloads progress.json)</span>
+      <button id="btnTimer" class="btn">Start Timer</button>
+      <span id="lblTimer" class="timer">⏱ 0.0s</span>
+      <span class="save-note">(Скачивает progress.json — браузер не может писать прямо в папку)</span>
     </div>
   </div>
 
   <div class="container" id="container"></div>
 
 <script>
-// Language Learning — single-file HTML port of the provided Tkinter app.
-// Behavior: loads blocks.json and progress.json from same folder (via fetch).
-// Saving progress triggers a download of progress.json because browsers cannot write local files.
-
 let blocks = [];
 let progress = {};
-let currentLang = 'pl'; // 'pl' or 'en'
+let currentLang = 'pl';
 
 const container = document.getElementById('container');
 const btnPl = document.getElementById('btnPl');
 const btnEn = document.getElementById('btnEn');
 const downloadBtn = document.getElementById('downloadProgress');
+const btnTimer = document.getElementById('btnTimer');
+const lblTimer = document.getElementById('lblTimer');
 
-function setActiveButton() {
-  if (currentLang === 'pl') {
-    btnPl.classList.add('active');
-    btnEn.classList.remove('active');
-  } else {
-    btnEn.classList.add('active');
-    btnPl.classList.remove('active');
+// Таймер
+let startTime = null;
+let running = false;
+
+function updateTimerDisplay() {
+  if (running && startTime !== null) {
+    const elapsed = (Date.now() - startTime) / 1000;
+    lblTimer.textContent = `⏱ ${elapsed.toFixed(1)}s`;
+    setTimeout(updateTimerDisplay, 100);
   }
 }
 
-btnPl.addEventListener('click', () => { currentLang = 'pl'; setActiveButton(); renderBlocks(); });
-btnEn.addEventListener('click', () => { currentLang = 'en'; setActiveButton(); renderBlocks(); });
+function startTimer() {
+  startTime = Date.now();
+  running = true;
+  btnTimer.textContent = 'Stop Timer';
+  lblTimer.textContent = '⏱ 0.0s';
+  updateTimerDisplay();
+}
 
-// Load blocks.json
-fetch('blocks.json')
-  .then(r => { if (!r.ok) throw new Error('blocks.json not found'); return r.json(); })
-  .then(data => { blocks = data; renderBlocks(); })
-  .catch(err => { container.innerHTML = '<div style="color:red;">Error loading blocks.json — please place blocks.json in the same folder as this HTML file.</div>'; console.error(err); });
+function stopTimer() {
+  if (running && startTime !== null) {
+    const elapsed = (Date.now() - startTime) / 1000;
+    lblTimer.textContent = `⏱ ${elapsed.toFixed(1)}s`;
+  }
+  running = false;
+  btnTimer.textContent = 'Start Timer';
+}
 
-// Load progress.json if exists
-fetch('progress.json')
-  .then(r => { if (!r.ok) throw new Error('no progress.json'); return r.json(); })
-  .then(data => { progress = data; renderBlocks(); })
-  .catch(_ => { progress = {}; /* no file — start empty */ });
+function toggleTimer() {
+  if (!running) startTimer();
+  else stopTimer();
+}
 
+btnTimer.addEventListener('click', toggleTimer);
+
+// Сохранение прогресса
 function saveProgressFile() {
   const blob = new Blob([JSON.stringify(progress, null, 2)], {type: 'application/json'});
   const url = URL.createObjectURL(blob);
@@ -84,6 +98,21 @@ function saveProgressFile() {
 
 downloadBtn.addEventListener('click', saveProgressFile);
 
+// Переключение языка
+function setActiveButton() {
+  if (currentLang === 'pl') {
+    btnPl.classList.add('active');
+    btnEn.classList.remove('active');
+  } else {
+    btnEn.classList.add('active');
+    btnPl.classList.remove('active');
+  }
+}
+
+btnPl.addEventListener('click', () => { currentLang = 'pl'; setActiveButton(); renderBlocks(); });
+btnEn.addEventListener('click', () => { currentLang = 'en'; setActiveButton(); renderBlocks(); });
+
+// Проверка ответа
 function checkAnswer(idx, entryEl, statusEl) {
   const targetLang = (currentLang === 'pl') ? 'en' : 'pl';
   const userInput = (entryEl.value || '').trim().toLowerCase();
@@ -95,14 +124,49 @@ function checkAnswer(idx, entryEl, statusEl) {
     progress[String(idx)] = false;
     statusEl.textContent = '❌';
   }
+  // если все строки ✅ — стоп таймер
+  if (blocks.length > 0 && blocks.every((_,i)=>progress[String(i)])) {
+    stopTimer();
+  }
 }
 
+// Подсказка
+function toggleHint(idx, entryEl, btnEl) {
+  const targetLang = (currentLang === 'pl') ? 'en' : 'pl';
+  const correctText = blocks[idx][targetLang];
+  if (entryEl.value === correctText && entryEl.style.color === 'gray') {
+    entryEl.value = '';
+    entryEl.style.color = 'black';
+    btnEl.classList.remove('active');
+  } else {
+    entryEl.value = correctText;
+    entryEl.style.color = 'gray';
+    btnEl.classList.add('active');
+  }
+}
+
+// Загрузка блоков и прогресса
+fetch('blocks.json')
+  .then(r => r.json())
+  .then(data => { blocks = data; renderBlocks(); })
+  .catch(err => { container.innerHTML = '<div style="color:red;">Ошибка загрузки blocks.json</div>'; });
+
+fetch('progress.json')
+  .then(r => r.json())
+  .then(data => { progress = data; renderBlocks(); })
+  .catch(_ => { progress = {}; });
+
+// Рендер блоков
 function renderBlocks() {
   container.innerHTML = '';
   setActiveButton();
   blocks.forEach((block, idx) => {
     const row = document.createElement('div');
     row.className = 'row';
+
+    const num = document.createElement('div');
+    num.className = 'num';
+    num.textContent = (idx+1)+'.';
 
     const text = document.createElement('div');
     text.className = 'text';
@@ -111,34 +175,42 @@ function renderBlocks() {
     const entry = document.createElement('input');
     entry.className = 'entry';
     entry.type = 'text';
+    entry.style.color = 'black';
     entry.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        checkAnswer(idx, entry, status);
+      if (e.key === 'Enter') checkAnswer(idx, entry, status);
+      if (entry.style.color === 'gray') {
+        entry.value = '';
+        entry.style.color = 'black';
+        btnHint.classList.remove('active');
       }
     });
-
-    const btn = document.createElement('button');
-    btn.className = 'check';
-    btn.textContent = '✔';
-    btn.addEventListener('click', () => { checkAnswer(idx, entry, status); });
 
     const status = document.createElement('div');
     status.className = 'status';
     if (String(idx) in progress) {
       status.textContent = progress[String(idx)] ? '✅' : '❌';
-    } else {
-      status.textContent = '';
     }
 
+    const btnCheck = document.createElement('button');
+    btnCheck.className = 'check';
+    btnCheck.textContent = '✔';
+    btnCheck.addEventListener('click', () => checkAnswer(idx, entry, status));
+
+    const btnHint = document.createElement('button');
+    btnHint.className = 'hint';
+    btnHint.textContent = '💡';
+    btnHint.addEventListener('click', () => toggleHint(idx, entry, btnHint));
+
+    row.appendChild(num);
     row.appendChild(text);
     row.appendChild(entry);
-    row.appendChild(btn);
     row.appendChild(status);
+    row.appendChild(btnCheck);
+    row.appendChild(btnHint);
 
     container.appendChild(row);
   });
 }
-
 </script>
 </body>
 </html>
