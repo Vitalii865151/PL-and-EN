@@ -73,12 +73,16 @@ function startTimer() {
 
 function stopTimer() {
   if (running && startTime !== null) {
-    const elapsed = (Date.now() - startTime) / 1000;
-    lblTimer.textContent = `⏱ ${elapsed.toFixed(1)}s`;
+    const totalSeconds = Math.floor((Date.now() - startTime) / 1000);
+    const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+    const secs = String(totalSeconds % 60).padStart(2, '0');
+    lblTimer.textContent = `⏱ ${hrs}:${mins}:${secs}`;
   }
   running = false;
   btnTimer.textContent = 'Start Timer';
 }
+
 
 function toggleTimer() {
   if (!running) startTimer();
