@@ -16,7 +16,7 @@
       margin-bottom: 20px;
     }
     button {
-      padding: 8px 14px;
+      padding: 6px 10px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
@@ -31,6 +31,7 @@
       align-items: center;
       margin-bottom: 10px;
       gap: 10px;
+      flex-wrap: wrap;
     }
     .row span {
       min-width: 240px;
@@ -43,6 +44,13 @@
       width: 20px;
       text-align: center;
       font-size: 18px;
+    }
+    .hint {
+      font-size: 13px;
+      color: #444;
+      font-style: italic;
+      margin-left: 250px;
+      flex-basis: 100%;
     }
   </style>
 </head>
@@ -92,6 +100,15 @@
         status.className = "status";
         row.appendChild(status);
 
+        const hintBtn = document.createElement("button");
+        hintBtn.textContent = "?";
+        row.appendChild(hintBtn);
+
+        const hint = document.createElement("div");
+        hint.className = "hint";
+        hint.style.display = "none";
+        row.appendChild(hint);
+
         btn.onclick = () => {
           const targetLang = reverse ? "pl" : (currentLang === "pl" ? "en" : "pl");
           const correct = block[targetLang].trim().toLowerCase();
@@ -106,6 +123,12 @@
         input.addEventListener("keydown", e => {
           if (e.key === "Enter") btn.click();
         });
+
+        hintBtn.onclick = () => {
+          const targetLang = reverse ? "pl" : (currentLang === "pl" ? "en" : "pl");
+          hint.textContent = "Подсказка: " + block[targetLang];
+          hint.style.display = "block";
+        };
 
         container.appendChild(row);
       });
