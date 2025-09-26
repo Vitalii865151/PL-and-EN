@@ -1,117 +1,144 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>PL & EN Trainer</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Language Learning</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f8f9fa;
-    }
-    h1 {
-      text-align: center;
-    }
-    .task {
-      margin-bottom: 20px;
-      padding: 10px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .task-number {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    input {
-      padding: 6px;
-      width: 250px;
-      margin-right: 10px;
-    }
-    button {
-      padding: 6px 10px;
-      margin-right: 5px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .check {
-      background: #007bff;
-      color: white;
-    }
-    .hint {
-      background: #6c757d;
-      color: white;
-    }
-    .status {
-      font-weight: bold;
-      margin-left: 10px;
-    }
-    .correct { color: green; }
-    .wrong { color: red; }
-    .hint-text {
-      margin-top: 5px;
-      color: gray;
-      font-style: italic;
-      display: none;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 12px; box-sizing: border-box; }
+    .top { margin-bottom: 8px; }
+    .btn { display:inline-block; padding:8px 12px; margin-right:6px; cursor:pointer; border:1px solid #888; border-radius:4px; user-select:none; }
+    .btn.active { background:#ddd; box-shadow: inset 0 0 3px rgba(0,0,0,0.2); }
+    .container { height: calc(100vh - 96px); overflow:auto; border-top:1px solid #eee; padding-top:8px; }
+    .row { display:flex; align-items:flex-start; gap:8px; padding:6px; border-bottom:1px solid #f0f0f0; }
+    .text { width:420px; flex:0 0 420px; font-size:14px; white-space:pre-wrap; }
+    .entry { flex: 0 0 260px; font-size:14px; padding:6px; }
+    .status { width:32px; text-align:center; font-size:18px; }
+    .check { width:36px; height:30px; cursor:pointer; }
+    .controls { margin-bottom:6px; }
+    .save-note { margin-left:12px; font-size:13px; color:#555; }
   </style>
 </head>
 <body>
-  <h1>PL & EN Trainer</h1>
-
-  <div class="task" data-answer="kot">
-    <div class="task-number">1.</div>
-    <input type="text" placeholder="Введите перевод">
-    <button class="check">Проверить</button>
-    <button class="hint">Подсказка</button>
-    <span class="status"></span>
-    <div class="hint-text">Ответ: kot</div>
+  <div class="top">
+    <div class="controls">
+      <span id="btnPl" class="btn">Polish</span>
+      <span id="btnEn" class="btn">English</span>
+      <button id="downloadProgress" class="btn">Save progress</button>
+      <span class="save-note">(Browsers cannot overwrite local files. This downloads progress.json)</span>
+    </div>
   </div>
 
-  <div class="task" data-answer="pies">
-    <div class="task-number">2.</div>
-    <input type="text" placeholder="Введите перевод">
-    <button class="check">Проверить</button>
-    <button class="hint">Подсказка</button>
-    <span class="status"></span>
-    <div class="hint-text">Ответ: pies</div>
-  </div>
+  <div class="container" id="container"></div>
 
-  <div class="task" data-answer="dom">
-    <div class="task-number">3.</div>
-    <input type="text" placeholder="Введите перевод">
-    <button class="check">Проверить</button>
-    <button class="hint">Подсказка</button>
-    <span class="status"></span>
-    <div class="hint-text">Ответ: dom</div>
-  </div>
+<script>
+// Language Learning — single-file HTML port of the provided Tkinter app.
+// Behavior: loads blocks.json and progress.json from same folder (via fetch).
+// Saving progress triggers a download of progress.json because browsers cannot write local files.
 
-  <script>
-    document.querySelectorAll(".task").forEach(task => {
-      const input = task.querySelector("input");
-      const checkBtn = task.querySelector(".check");
-      const hintBtn = task.querySelector(".hint");
-      const status = task.querySelector(".status");
-      const hintText = task.querySelector(".hint-text");
-      const answer = task.dataset.answer;
+let blocks = [];
+let progress = {};
+let currentLang = 'pl'; // 'pl' or 'en'
 
-      checkBtn.addEventListener("click", () => {
-        if (input.value.trim().toLowerCase() === answer.toLowerCase()) {
-          status.textContent = "✅ Правильно!";
-          status.className = "status correct";
-        } else {
-          status.textContent = "❌ Неправильно";
-          status.className = "status wrong";
-        }
-      });
+const container = document.getElementById('container');
+const btnPl = document.getElementById('btnPl');
+const btnEn = document.getElementById('btnEn');
+const downloadBtn = document.getElementById('downloadProgress');
 
-      hintBtn.addEventListener("click", () => {
-        hintText.style.display = (hintText.style.display === "none" || hintText.style.display === "") 
-          ? "block" 
-          : "none";
-      });
+function setActiveButton() {
+  if (currentLang === 'pl') {
+    btnPl.classList.add('active');
+    btnEn.classList.remove('active');
+  } else {
+    btnEn.classList.add('active');
+    btnPl.classList.remove('active');
+  }
+}
+
+btnPl.addEventListener('click', () => { currentLang = 'pl'; setActiveButton(); renderBlocks(); });
+btnEn.addEventListener('click', () => { currentLang = 'en'; setActiveButton(); renderBlocks(); });
+
+// Load blocks.json
+fetch('blocks.json')
+  .then(r => { if (!r.ok) throw new Error('blocks.json not found'); return r.json(); })
+  .then(data => { blocks = data; renderBlocks(); })
+  .catch(err => { container.innerHTML = '<div style="color:red;">Error loading blocks.json — please place blocks.json in the same folder as this HTML file.</div>'; console.error(err); });
+
+// Load progress.json if exists
+fetch('progress.json')
+  .then(r => { if (!r.ok) throw new Error('no progress.json'); return r.json(); })
+  .then(data => { progress = data; renderBlocks(); })
+  .catch(_ => { progress = {}; /* no file — start empty */ });
+
+function saveProgressFile() {
+  const blob = new Blob([JSON.stringify(progress, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'progress.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+downloadBtn.addEventListener('click', saveProgressFile);
+
+function checkAnswer(idx, entryEl, statusEl) {
+  const targetLang = (currentLang === 'pl') ? 'en' : 'pl';
+  const userInput = (entryEl.value || '').trim().toLowerCase();
+  const correct = (blocks[idx] && blocks[idx][targetLang]) ? blocks[idx][targetLang].trim().toLowerCase() : '';
+  if (userInput === correct && userInput !== '') {
+    progress[String(idx)] = true;
+    statusEl.textContent = '✅';
+  } else {
+    progress[String(idx)] = false;
+    statusEl.textContent = '❌';
+  }
+}
+
+function renderBlocks() {
+  container.innerHTML = '';
+  setActiveButton();
+  blocks.forEach((block, idx) => {
+    const row = document.createElement('div');
+    row.className = 'row';
+
+    const text = document.createElement('div');
+    text.className = 'text';
+    text.textContent = block[currentLang] || '';
+
+    const entry = document.createElement('input');
+    entry.className = 'entry';
+    entry.type = 'text';
+    entry.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        checkAnswer(idx, entry, status);
+      }
     });
-  </script>
+
+    const btn = document.createElement('button');
+    btn.className = 'check';
+    btn.textContent = '✔';
+    btn.addEventListener('click', () => { checkAnswer(idx, entry, status); });
+
+    const status = document.createElement('div');
+    status.className = 'status';
+    if (String(idx) in progress) {
+      status.textContent = progress[String(idx)] ? '✅' : '❌';
+    } else {
+      status.textContent = '';
+    }
+
+    row.appendChild(text);
+    row.appendChild(entry);
+    row.appendChild(btn);
+    row.appendChild(status);
+
+    container.appendChild(row);
+  });
+}
+
+</script>
 </body>
 </html>
