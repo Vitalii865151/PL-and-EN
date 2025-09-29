@@ -16,6 +16,25 @@
     .entry { flex:0 0 280px; font-size:14px; padding:6px; }
     .status { width:32px; text-align:center; font-size:18px; }
     .check, .hint { width:36px; height:30px; cursor:pointer; }
+
+    /* Voice button */
+    .voice {
+      width: 36px;
+      height: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #888;
+      border-radius: 4px;
+      background: #fff;
+      user-select: none;
+    }
+    .voice:active { transform: translateY(1px); }
+
+
+    
     .controls { margin-bottom:6px; }
     .save-note { margin-left:12px; font-size:13px; color:#555; }
     .timer { font-size:16px; margin-left:12px; }
@@ -217,6 +236,23 @@ function renderBlocks() {
     btnCheck.className = 'check';
     btnCheck.textContent = '✔';
     btnCheck.addEventListener('click', () => checkAnswer(idx, entry, status));
+
+    // --- Голосовая кнопка (шаг 1: только UI, без распознавания) ---
+    const btnVoice = document.createElement('button');
+    btnVoice.className = 'voice';
+    btnVoice.type = 'button';
+    btnVoice.title = 'Голосовой ввод';
+    btnVoice.setAttribute('aria-label', 'Voice input');
+    btnVoice.textContent = '🎤';
+    // Пока пустой обработчик — реализуем распознавание на следующем шаге.
+    // Оставляем консольную заметку для теста.
+    btnVoice.addEventListener('click', () => {
+      console.log('Voice button clicked on row', idx);
+    });
+    row.appendChild(btnVoice);
+    // --- конец голосовой кнопки ---
+
+    
 
     const btnHint = document.createElement('button');
     btnHint.className = 'hint';
