@@ -249,7 +249,6 @@ function renderBlocks() {
     btnVoice.addEventListener('click', () => {
       console.log('Voice button clicked on row', idx);
     });
-    row.appendChild(btnVoice);
     // --- конец голосовой кнопки ---
 
     
@@ -264,6 +263,7 @@ function renderBlocks() {
     row.appendChild(entry);
     row.appendChild(status);
     row.appendChild(btnCheck);
+    row.appendChild(btnVoice);   // 🎤 сюда, между ✔ и 💡
     row.appendChild(btnHint);
 
     container.appendChild(row);
