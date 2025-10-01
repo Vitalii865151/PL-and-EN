@@ -22,7 +22,7 @@
       margin: 20px auto;
       font-size: 22px;
       line-height: 1.6;
-      overflow-y: auto; /* скролл внутри рамки */
+      overflow-y: auto;
       white-space: pre-wrap;
     }
 
@@ -62,22 +62,28 @@ A small carpet makes the floor warm and soft.
 
   <script>
     const sourceText = document.getElementById("sourceText").innerText;
-    const typingFrame = document.getElementById("typingFrame");
 
+    const typingFrame = document.getElementById("typingFrame");
     typingFrame.addEventListener("input", () => {
+      // берём набранный текст "как есть"
       const typed = typingFrame.innerText;
+
+      // очищаем и пересобираем
       typingFrame.innerHTML = "";
 
       for (let i = 0; i < typed.length; i++) {
         const span = document.createElement("span");
         span.textContent = typed[i];
-        if (sourceText[i] && typed[i] !== sourceText[i]) {
-          span.classList.add("highlight"); // подсветка ошибки
+
+        // сравнение символа
+        if (sourceText[i] !== undefined && typed[i] !== sourceText[i]) {
+          span.classList.add("highlight"); // только неправильные
         }
+
         typingFrame.appendChild(span);
       }
 
-      // курсор в конец
+      // возвращаем курсор в конец
       const range = document.createRange();
       const sel = window.getSelection();
       range.selectNodeContents(typingFrame);
