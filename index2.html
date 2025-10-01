@@ -3,16 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page 2</title>
+  <title>Typing Practice</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0; /* однотонный фон */
+      background-color: #f0f0f0;
+      padding: 20px;
+    }
+
+    .frame {
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px;
+      width: 90%;
+      height: 150px;
+      margin: 20px auto;
+      font-size: 22px;
+      line-height: 1.6;
+      overflow-y: auto; /* скролл внутри рамки */
+      white-space: pre-wrap;
+    }
+
+    .input-frame {
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px;
+      width: 90%;
+      height: 150px;
+      margin: 20px auto;
+      font-size: 22px;
+      line-height: 1.6;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    .highlight {
+      background-color: yellow;
     }
   </style>
 </head>
 <body>
-  <!-- пока пусто -->
+
+  <!-- Верхняя рамка с текстом -->
+  <div id="sourceText" class="frame">
+My room is small but very cozy.
+There is a big wooden desk near the window.
+On the desk, I keep my books, a laptop, and a lamp.
+I have a comfortable bed with a blue blanket.
+The walls are light grey, and there is a picture of mountains.
+A small carpet makes the floor warm and soft.
+  </div>
+
+  <!-- Нижняя рамка для переписывания -->
+  <div id="typingFrame" class="input-frame" contenteditable="true"></div>
+
+  <script>
+    const sourceText = document.getElementById("sourceText").innerText;
+    const typingFrame = document.getElementById("typingFrame");
+
+    typingFrame.addEventListener("input", () => {
+      const typed = typingFrame.innerText;
+      typingFrame.innerHTML = "";
+
+      for (let i = 0; i < typed.length; i++) {
+        const span = document.createElement("span");
+        span.textContent = typed[i];
+        if (sourceText[i] && typed[i] !== sourceText[i]) {
+          span.classList.add("highlight"); // подсветка ошибки
+        }
+        typingFrame.appendChild(span);
+      }
+
+      // курсор в конец
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(typingFrame);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+  </script>
+
 </body>
 </html>
