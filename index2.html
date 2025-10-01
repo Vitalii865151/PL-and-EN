@@ -1,238 +1,93 @@
-<!doctype html>
-<html lang="ru">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Language Learning</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Page 2</title>
+
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 12px; box-sizing: border-box; background-color: #d3d3d3; }
-    .top { margin-bottom: 8px; }
-    .btn { display:inline-block; padding:8px 12px; margin-right:6px; cursor:pointer; border:1px solid #888; border-radius:4px; user-select:none; }
-    .btn.active { background:#ddd; box-shadow: inset 0 0 3px rgba(0,0,0,0.2); }
-    .container { height: calc(100vh - 140px); overflow:auto; border-top:1px solid #eee; padding-top:8px; }
-    .row { display:flex; align-items:center; gap:8px; padding:6px; border-bottom:1px solid #f0f0f0; }
-    .num { width:40px; text-align:right; font-size:14px; }
-    .text { width:500px; flex:0 0 500px; font-size:14px; white-space:pre-wrap; }
-    .entry { flex:0 0 280px; font-size:14px; padding:6px; }
-    .status { width:32px; text-align:center; font-size:18px; }
-    .check, .hint { width:36px; height:30px; cursor:pointer; }
-    .controls { margin-bottom:6px; }
-    .save-note { margin-left:12px; font-size:13px; color:#555; }
-    .timer { font-size:16px; margin-left:12px; }
-    /* Адаптив для экранов меньше 978px */
-    @media (max-width: 978px) {
-      .row {
-        flex-wrap: wrap;        /* разрешаем перенос элементов */
-      }
-      .entry {
-        flex: 1 1 100%;         /* поле ввода растягивается на всю ширину */
-        min-width: 0;           /* чтобы не ломало контейнер */
-      }
-      .status, .check, .hint {
-        margin-top: 4px;        /* чуть отступ сверху */
-      }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #9face6);
+      color: #222;
     }
-    /* Адаптив для экранов меньше 978px */
+
+    header {
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    nav {
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #ffd700;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .text-block p {
+      margin: 10px 0;
+      font-size: 18px;
+      line-height: 1.5;
+    }
   </style>
+
 </head>
 <body>
-  <div class="top">
-    <div class="controls">
-      <span id="btnPl" class="btn">Polish</span>
-      <span id="btnEn" class="btn">English</span>
-      <button id="downloadProgress" class="btn">Save progress</button>
-      <button id="btnTimer" class="btn">Start Timer</button>
-      <span id="lblTimer" class="timer">⏱ 0.0s</span>
-      <span class="save-note">(Скачивает progress.json — браузер не может писать прямо в папку)</span>
-    </div>
-  </div>
+  <!-- Шапка -->
+  <header>
+    <h1>PL & EN Learning</h1>
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="page2.html">Страница 2</a>
+    </nav>
+  </header>
 
-  <div class="container" id="container"></div>
+  <!-- Контент -->
+  <main>
+    <section class="content">
+      <h2>Вторая страница</h2>
+      <p>Здесь твой текст. На этой странице нет прогресса и кнопок.</p>
 
-<script>
-let blocks = [];
-let progress = {};
-let currentLang = 'pl';
+      <div class="text-block">
+        <p>21. This is my first sentence on the second page.</p>
+        <p>22. I continue writing in English here.</p>
+        <p>23. And I will add more lines later...</p>
+      </div>
+    </section>
+  </main>
 
-const container = document.getElementById('container');
-const btnPl = document.getElementById('btnPl');
-const btnEn = document.getElementById('btnEn');
-const downloadBtn = document.getElementById('downloadProgress');
-const btnTimer = document.getElementById('btnTimer');
-const lblTimer = document.getElementById('lblTimer');
-
-// Таймер
-let startTime = null;
-let running = false;
-
-function updateTimerDisplay() {
-  if (running && startTime !== null) {
-    const totalSeconds = Math.floor((Date.now() - startTime) / 1000);
-    const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
-    const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
-    const secs = String(totalSeconds % 60).padStart(2, '0');
-    lblTimer.textContent = `⏱ ${hrs}:${mins}:${secs}`;
-    setTimeout(updateTimerDisplay, 500); // обновляем каждые 0.5 сек
-  }
-}
-
-
-function startTimer() {
-  startTime = Date.now();
-  running = true;
-  btnTimer.textContent = 'Stop Timer';
-  lblTimer.textContent = '⏱ 0.0s';
-  updateTimerDisplay();
-}
-
-function stopTimer() {
-  if (running && startTime !== null) {
-    const totalSeconds = Math.floor((Date.now() - startTime) / 1000);
-    const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
-    const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
-    const secs = String(totalSeconds % 60).padStart(2, '0');
-    lblTimer.textContent = `⏱ ${hrs}:${mins}:${secs}`;
-  }
-  running = false;
-  btnTimer.textContent = 'Start Timer';
-}
-
-
-function toggleTimer() {
-  if (!running) startTimer();
-  else stopTimer();
-}
-
-btnTimer.addEventListener('click', toggleTimer);
-
-// Сохранение прогресса
-function saveProgressFile() {
-  const blob = new Blob([JSON.stringify(progress, null, 2)], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'progress.json';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-downloadBtn.addEventListener('click', saveProgressFile);
-
-// Переключение языка
-function setActiveButton() {
-  if (currentLang === 'pl') {
-    btnPl.classList.add('active');
-    btnEn.classList.remove('active');
-  } else {
-    btnEn.classList.add('active');
-    btnPl.classList.remove('active');
-  }
-}
-
-btnPl.addEventListener('click', () => { currentLang = 'pl'; setActiveButton(); renderBlocks(); });
-btnEn.addEventListener('click', () => { currentLang = 'en'; setActiveButton(); renderBlocks(); });
-
-// Проверка ответа
-function checkAnswer(idx, entryEl, statusEl) {
-  const targetLang = (currentLang === 'pl') ? 'en' : 'pl';
-  const userInput = (entryEl.value || '').trim().toLowerCase();
-  const correct = (blocks[idx] && blocks[idx][targetLang]) ? blocks[idx][targetLang].trim().toLowerCase() : '';
-  if (userInput === correct && userInput !== '') {
-    progress[String(idx)] = true;
-    statusEl.textContent = '✅';
-  } else {
-    progress[String(idx)] = false;
-    statusEl.textContent = '❌';
-  }
-  // если все строки ✅ — стоп таймер
-  if (blocks.length > 0 && blocks.every((_,i)=>progress[String(i)])) {
-    stopTimer();
-  }
-}
-
-// Подсказка
-function toggleHint(idx, entryEl, btnEl) {
-  const targetLang = (currentLang === 'pl') ? 'en' : 'pl';
-  const correctText = blocks[idx][targetLang];
-  if (entryEl.value === correctText && entryEl.style.color === 'gray') {
-    entryEl.value = '';
-    entryEl.style.color = 'black';
-    btnEl.classList.remove('active');
-  } else {
-    entryEl.value = correctText;
-    entryEl.style.color = 'gray';
-    btnEl.classList.add('active');
-  }
-}
-
-// Загрузка блоков и прогресса
-fetch('blocks.json')
-  .then(r => r.json())
-  .then(data => { blocks = data; renderBlocks(); })
-  .catch(err => { container.innerHTML = '<div style="color:red;">Ошибка загрузки blocks.json</div>'; });
-
-fetch('progress.json')
-  .then(r => r.json())
-  .then(data => { progress = data; renderBlocks(); })
-  .catch(_ => { progress = {}; });
-
-// Рендер блоков
-function renderBlocks() {
-  container.innerHTML = '';
-  setActiveButton();
-  blocks.forEach((block, idx) => {
-    const row = document.createElement('div');
-    row.className = 'row';
-
-    const num = document.createElement('div');
-    num.className = 'num';
-    num.textContent = (idx+1)+'.';
-
-    const text = document.createElement('div');
-    text.className = 'text';
-    text.textContent = block[currentLang] || '';
-
-    const entry = document.createElement('input');
-    entry.className = 'entry';
-    entry.type = 'text';
-    entry.style.color = 'black';
-    entry.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') checkAnswer(idx, entry, status);
-      if (entry.style.color === 'gray') {
-        entry.value = '';
-        entry.style.color = 'black';
-        btnHint.classList.remove('active');
-      }
-    });
-
-    const status = document.createElement('div');
-    status.className = 'status';
-    if (String(idx) in progress) {
-      status.textContent = progress[String(idx)] ? '✅' : '❌';
-    }
-
-    const btnCheck = document.createElement('button');
-    btnCheck.className = 'check';
-    btnCheck.textContent = '✔';
-    btnCheck.addEventListener('click', () => checkAnswer(idx, entry, status));
-
-    const btnHint = document.createElement('button');
-    btnHint.className = 'hint';
-    btnHint.textContent = '💡';
-    btnHint.addEventListener('click', () => toggleHint(idx, entry, btnHint));
-
-    row.appendChild(num);
-    row.appendChild(text);
-    row.appendChild(entry);
-    row.appendChild(status);
-    row.appendChild(btnCheck);
-    row.appendChild(btnHint);
-
-    container.appendChild(row);
-  });
-}
-</script>
+  <script>
+    // Пока JS не нужен, но если захочешь что-то добавить — место готово
+    console.log("Page 2 loaded");
+  </script>
 </body>
 </html>
