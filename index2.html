@@ -9,12 +9,12 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #74ebd5, #9face6);
+      background-color: #f0f0f0; /* однотонный фон */
       color: #222;
     }
 
     header {
-      background: rgba(0,0,0,0.6);
+      background: #333;
       color: white;
       padding: 15px;
       text-align: center;
@@ -33,33 +33,17 @@
       text-decoration: none;
       margin: 0 10px;
       font-weight: bold;
-      transition: color 0.3s;
     }
 
     nav a:hover {
-      color: #ffd700;
+      text-decoration: underline;
     }
 
     main {
       padding: 20px;
-    }
-
-    .content {
-      max-width: 800px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-
-    .text-block p {
-      margin: 10px 0;
-      font-size: 18px;
-      line-height: 1.5;
+      min-height: 80vh; /* чтоб было пространство */
     }
   </style>
-
 </head>
 <body>
   <!-- Шапка -->
@@ -71,23 +55,9 @@
     </nav>
   </header>
 
-  <!-- Контент -->
+  <!-- Контент (пока пусто) -->
   <main>
-    <section class="content">
-      <h2>Вторая страница</h2>
-      <p>Здесь твой текст. На этой странице нет прогресса и кнопок.</p>
-
-      <div class="text-block">
-        <p>21. This is my first sentence on the second page.</p>
-        <p>22. I continue writing in English here.</p>
-        <p>23. And I will add more lines later...</p>
-      </div>
-    </section>
+    <!-- тут потом добавим -->
   </main>
-
-  <script>
-    // Пока JS не нужен, но если захочешь что-то добавить — место готово
-    console.log("Page 2 loaded");
-  </script>
 </body>
 </html>
