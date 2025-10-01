@@ -61,29 +61,27 @@ A small carpet makes the floor warm and soft.
   <div id="typingFrame" class="input-frame" contenteditable="true"></div>
 
   <script>
-    const sourceText = document.getElementById("sourceText").innerText;
+    const sourceText = document.getElementById("sourceText").innerText.replace(/\r?\n/g, "\n");
 
     const typingFrame = document.getElementById("typingFrame");
     typingFrame.addEventListener("input", () => {
-      // берём набранный текст "как есть"
-      const typed = typingFrame.innerText;
+      // берём введённый текст без html-тегов
+      const typed = typingFrame.innerText.replace(/\r?\n/g, "\n");
 
-      // очищаем и пересобираем
-      typingFrame.innerHTML = "";
-
+      // пересобираем содержимое посимвольно
+      let html = "";
       for (let i = 0; i < typed.length; i++) {
-        const span = document.createElement("span");
-        span.textContent = typed[i];
-
-        // сравнение символа
-        if (sourceText[i] !== undefined && typed[i] !== sourceText[i]) {
-          span.classList.add("highlight"); // только неправильные
+        const ch = typed[i];
+        if (sourceText[i] !== undefined && ch !== sourceText[i]) {
+          html += `<span class="highlight">${ch}</span>`;
+        } else {
+          html += ch;
         }
-
-        typingFrame.appendChild(span);
       }
 
-      // возвращаем курсор в конец
+      typingFrame.innerHTML = html;
+
+      // курсор в конец
       const range = document.createRange();
       const sel = window.getSelection();
       range.selectNodeContents(typingFrame);
