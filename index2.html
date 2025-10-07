@@ -1,94 +1,196 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Typing Practice</title>
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       background-color: #f0f0f0;
       padding: 20px;
     }
 
-    .frame {
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .frame, .input-frame {
       border: 2px solid #333;
       border-radius: 8px;
       background: #fff;
       padding: 10px;
-      width: 90%;
+      width: 100%;
       height: 150px;
-      margin: 20px auto;
-      font-size: 22px;
+      margin: 15px 0;
+      font-size: 20px;
       line-height: 1.6;
       overflow-y: auto;
       white-space: pre-wrap;
     }
 
     .input-frame {
-      border: 2px solid #333;
-      border-radius: 8px;
-      background: #fff;
-      padding: 10px;
-      width: 90%;
-      height: 150px;
-      margin: 20px auto;
-      font-size: 22px;
-      line-height: 1.6;
-      overflow-y: auto;
-      white-space: pre-wrap;
+      outline: none;
     }
 
     .highlight {
-      background-color: yellow;
+      background-color: #ffb3b3;
+    }
+
+    /* Menu styles */
+    .menu {
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      border: 2px solid #333;
+    }
+
+    .menu-item {
+      margin: 5px 0;
+      cursor: pointer;
+      font-weight: bold;
+      user-select: none;
+    }
+
+    .submenu {
+      margin-left: 20px;
+      display: none;
+    }
+
+    .submenu-item {
+      margin: 4px 0;
+      cursor: pointer;
+      color: #333;
+      font-weight: normal;
+    }
+
+    .menu-item::before {
+      content: "▶ ";
+      font-size: 14px;
+      color: #666;
+    }
+
+    .menu-item.open::before {
+      content: "▼ ";
+    }
+
+    .submenu-item:hover {
+      color: #0078d7;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-
-  <!-- Верхняя рамка с текстом -->
-  <div id="sourceText" class="frame">My room is small but very cozy.
-There is a big wooden desk near the window.
-On the desk, I keep my books, a laptop, and a lamp.
-I have a comfortable bed with a blue blanket.
-The walls are light grey, and there is a picture of mountains.
-A small carpet makes the floor warm and soft.
+  <div class="container">
+    <div id="sourceText" class="frame"></div>
+    <div id="typingFrame" class="input-frame" contenteditable="true"></div>
+    <div class="menu" id="menu"></div>
   </div>
 
-  <!-- Нижняя рамка для переписывания -->
-  <div id="typingFrame" class="input-frame" contenteditable="true"></div>
-
   <script>
-    const sourceText = document.getElementById("sourceText").innerText.replace(/\r?\n/g, "\n");
-
+    const sourceTextDiv = document.getElementById("sourceText");
     const typingFrame = document.getElementById("typingFrame");
-    typingFrame.addEventListener("input", () => {
-      // берём введённый текст без html-тегов
-      const typed = typingFrame.innerText.replace(/\r?\n/g, "\n");
-
-      // пересобираем содержимое посимвольно
-      let html = "";
-      for (let i = 0; i < typed.length; i++) {
-        const ch = typed[i];
-        if (sourceText[i] !== undefined && ch !== sourceText[i]) {
-          html += `<span class="highlight">${ch}</span>`;
-        } else {
-          html += ch;
+    const menuDiv = document.getElementById("menu");
+  
+    // Загружаем структуру меню
+    fetch("texts.json")
+      .then(r => r.json())
+      .then(data => buildMenu(data))
+      .catch(err => {
+        menuDiv.innerHTML = `<p style="color:red;">Ошибка загрузки: ${err.message}</p>`;
+      });
+  
+    function buildMenu(menuStructure) {
+      for (const mainCategory in menuStructure) {
+        const item = document.createElement("div");
+        item.className = "menu-item";
+        item.textContent = mainCategory;
+  
+        const submenu = document.createElement("div");
+        submenu.className = "submenu";
+  
+        for (const sub in menuStructure[mainCategory]) {
+          const subItem = document.createElement("div");
+          subItem.className = "submenu-item";
+          subItem.textContent = sub;
+  
+          subItem.addEventListener("click", () => {
+            const filePath = menuStructure[mainCategory][sub];
+            fetch(filePath)
+              .then(res => res.text())
+              .then(text => {
+                sourceTextDiv.textContent = text;
+                typingFrame.textContent = "";
+              })
+              .catch(() => {
+                sourceTextDiv.textContent = "Ошибка: не удалось загрузить файл.";
+              });
+          });
+  
+          submenu.appendChild(subItem);
         }
+  
+        item.addEventListener("click", () => {
+          const open = item.classList.toggle("open");
+          submenu.style.display = open ? "block" : "none";
+        });
+  
+        menuDiv.appendChild(item);
+        menuDiv.appendChild(submenu);
       }
+    }
+  
+    // Подсветка ошибок
+    // Подсветка ошибок с корректной обработкой переносов строк
+    typingFrame.addEventListener("input", () => {
+    // Берём текст с обоих областей и нормализуем переносы строк
+    const typed = typingFrame.innerText.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    const reference = sourceTextDiv.innerText.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 
-      typingFrame.innerHTML = html;
+    let html = "";
+    for (let i = 0; i < typed.length; i++) {
+        const ch = typed[i];
+        const refCh = reference[i];
 
-      // курсор в конец
-      const range = document.createRange();
-      const sel = window.getSelection();
-      range.selectNodeContents(typingFrame);
-      range.collapse(false);
-      sel.removeAllRanges();
-      sel.addRange(range);
+        // Не подсвечиваем, если разница только в переносах строк
+        if (ch === "\n" && refCh === "\n") {
+        html += "<br>";
+        continue;
+        }
+
+        if (refCh !== undefined && ch !== refCh) {
+        html += `<span class="highlight">${ch}</span>`;
+        } else if (ch === "\n") {
+        html += "<br>";
+        } else {
+        html += ch;
+        }
+    }
+
+    typingFrame.innerHTML = html;
+
+    // Возвращаем курсор в конец
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.selectNodeContents(typingFrame);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
     });
-  </script>
 
+    // Синхронизация прокрутки
+    typingFrame.addEventListener("scroll", () => {
+    const ratio =
+        typingFrame.scrollTop /
+        (typingFrame.scrollHeight - typingFrame.clientHeight);
+    sourceTextDiv.scrollTop =
+        ratio * (sourceTextDiv.scrollHeight - sourceTextDiv.clientHeight);
+    });
+
+
+  </script>
+  
 </body>
 </html>
