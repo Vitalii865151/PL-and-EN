@@ -1,0 +1,12 @@
+{
+  "Дом": {
+    "Inside a Cozy Room": "texts/room.txt",
+    "Test2": "texts/Test2.txt",
+    "Test3": "texts/Test3.txt"
+  },
+  "Test": {
+    "Test": "texts/Test.txt",
+    "Test2": "texts/Test2.txt",
+    "Test3": "texts/Test3.txt"
+  }
+}
