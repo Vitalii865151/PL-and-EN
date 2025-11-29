@@ -47,5 +47,6 @@
   { "pl": "Wpuszcza światło", "en": "Lets light in" },
   { "pl": "Leży", "en": "Lies" },
   { "pl": "Interesujące", "en": "Interesting" },
-  { "pl": "Jak to się robi?", "en": "How is it done?" }
+  { "pl": "Jak to się robi?", "en": "How is it done?" },
+    { "pl": "Jak zrobić?", "en": "How to do it?" }
 ]
