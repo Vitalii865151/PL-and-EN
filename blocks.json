@@ -1,4 +1,8 @@
 [
+  { "pl": "Zespół", "en": "Group" },
+  { "pl": "Jeszcze czekam", "en": "I am still waiting" },
+  { "pl": "Defensywa", "en": "Defense" },
+  { "pl": "Tutaj", "en": "Here" },
   { "pl": "Sztywny", "en": "Stiff" },
   { "pl": "Przejrzałem", "en": "I looked through" },
   { "pl": "Cześć, jak się masz?", "en": "Hello, how are you?" },
@@ -42,7 +46,6 @@
   { "pl": "Tutaj", "en": "Here" },
   { "pl": "Wygodny", "en": "Comfortable" },
   { "pl": "Wpuszcza światło", "en": "Lets light in" },
-  { "pl": "Dodaje uroku", "en": "Adds charm" },
   { "pl": "Leży", "en": "Lies" },
   { "pl": "Interesujące", "en": "Interesting" },
   { "pl": "Tutaj", "en": "Here" },
