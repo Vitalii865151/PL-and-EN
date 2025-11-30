@@ -1,4 +1,9 @@
 [
+  { "pl": "Wpuszcza światło", "en": "Lets light in" },
+  { "pl": "Leży", "en": "Lies" },
+  { "pl": "Interesujące", "en": "Interesting" },
+  { "pl": "Jak to się robi?", "en": "How is it done?" },
+  { "pl": "Jak zrobić?", "en": "How to do it?" },
   { "pl": "Zespół", "en": "Group" },
   { "pl": "Jeszcze czekam", "en": "I am still waiting" },
   { "pl": "Defensywa", "en": "Defense" },
@@ -43,10 +48,5 @@
   { "pl": "Dodaje uroku", "en": "Adds charm" },
   { "pl": "Róg", "en": "Corner" },
   { "pl": "Odpoczywa", "en": "Rests" },
-  { "pl": "Wygodny", "en": "Comfortable" },
-  { "pl": "Wpuszcza światło", "en": "Lets light in" },
-  { "pl": "Leży", "en": "Lies" },
-  { "pl": "Interesujące", "en": "Interesting" },
-  { "pl": "Jak to się robi?", "en": "How is it done?" },
-    { "pl": "Jak zrobić?", "en": "How to do it?" }
+  { "pl": "Wygodny", "en": "Comfortable" }
 ]
