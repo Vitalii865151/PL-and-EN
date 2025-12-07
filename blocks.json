@@ -1,4 +1,9 @@
 [
+  { "pl": "Kiedy będzie?", "en": "When will it be?" },
+  { "pl": "Kiedy było?", "en": "When was it?" },
+  { "pl": "Jak napisać?", "en": "How to write?" },
+  { "pl": "Gdzie się dowiedzieć?", "en": "Where to find out?" },
+  { "pl": "Trzeba", "en": "It is necessary" },
   { "pl": "Wpuszcza światło", "en": "Lets light in" },
   { "pl": "Leży", "en": "Lies" },
   { "pl": "Interesujące", "en": "Interesting" },
