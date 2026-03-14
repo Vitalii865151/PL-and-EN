@@ -32,6 +32,7 @@ Sprawdźmy logi, żeby zobaczyć co się stało.
 Ten kod można później rozbudować.
 Dodajmy konfigurację w osobnym pliku.
 Teraz kod wygląda czyściej.
+przez API
 Zróbmy test, żeby sprawdzić czy wszystko działa.
 Ten projekt można wrzucić na GitHub.
 Teraz spróbujmy napisać bardziej zaawansowaną funkcję.
