@@ -4,7 +4,7 @@ Jak napisać kod, który automatyzuje parsowanie strony internetowej?
 Zróbmy funkcję, która będzie...
 Kod powinien umieć...
 Sprawdź, jak to jest napisane.
-Zróbmy prosty skrypt w Pythonie, który wyświetli w terminalu napis „Witaj świecie”.
+Zróbmy prosty skrypt w Pythonie, który wyświetli w terminalu napis "Witaj świecie".
 Powinien mieć jak najmniej kodu.
 Nie, to powinno być inaczej.
 Trzeba to przerobić.
