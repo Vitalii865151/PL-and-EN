@@ -1,10 +1,10 @@
-Cześć bocie.
+Cześć, bocie.
 Zacznijmy dziś nowy projekt.
 Jak napisać kod, który automatyzuje parsowanie strony internetowej?
 Zróbmy funkcję, która będzie...
 Kod powinien umieć...
-Sprawdź jak to jest napisane
-Zróbmy prosty skrypt w Pythonie, który wyświetli w terminalu napis "Witaj świecie".
+Sprawdź, jak to jest napisane.
+Zróbmy prosty skrypt w Pythonie, który wyświetli w terminalu napis „Witaj świecie”.
 Powinien mieć jak najmniej kodu.
 Nie, to powinno być inaczej.
 Trzeba to przerobić.
@@ -29,15 +29,17 @@ Teraz pobierzmy tekst z elementu strony.
 Dodajmy małe opóźnienie między zapytaniami.
 Ten skrypt powinien działać w tle.
 Uruchommy program jeszcze raz.
-Sprawdźmy logi, żeby zobaczyć co się stało.
+Sprawdźmy logi, żeby zobaczyć, co się stało.
 Ten kod można później rozbudować.
 Dodajmy konfigurację w osobnym pliku.
 Teraz kod wygląda czyściej.
-przez API
-Zróbmy test, żeby sprawdzić czy wszystko działa.
+Przez API.
+Zróbmy test, żeby sprawdzić, czy wszystko działa.
 Ten projekt można wrzucić na GitHub.
 Teraz spróbujmy napisać bardziej zaawansowaną funkcję.
-Jest tam przycisk i możemy zobaczyć odpowiedzi
-Stworzyłem ten projekt, żeby otrzymać. Zrobiłem, Myślałem, że to wystarczy, ale tak nie było.
-Bocie, teraz jestem w Ukrainie, w Charkowie. Nie mogę fizycznie pojechać do Polski
-mały zestaw ćwiczeń, który pomoże pisać poprawnie jak Polak
+Jest tam przycisk i możemy zobaczyć odpowiedzi.
+Stworzyłem ten projekt, żeby otrzymać softId.
+Myślałem, że to wystarczy, ale tak nie było.
+Bocie, teraz jestem w Ukrainie, w Charkowie.
+Nie mogę fizycznie pojechać do Polski.
+Mały zestaw ćwiczeń, który pomoże pisać poprawnie po polsku.
