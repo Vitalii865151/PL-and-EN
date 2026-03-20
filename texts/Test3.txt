@@ -1,45 +1,5 @@
-Cześć, bocie.
-Zacznijmy dziś nowy projekt.
-Jak napisać kod, który automatyzuje parsowanie strony internetowej?
-Zróbmy funkcję, która będzie...
-Kod powinien umieć...
-Sprawdź, jak to jest napisane.
-Zróbmy prosty skrypt w Pythonie, który wyświetli w terminalu napis "Witaj świecie".
-Powinien mieć jak najmniej kodu.
-Nie, to powinno być inaczej.
-Trzeba to przerobić.
-Dodajmy to do funkcji.
-Jak zrobić opóźnienie w działaniu skryptu?
-skrypt, funkcja, kod, parsowanie, strona internetowa, opóźnienie
-Zacznijmy od napisania prostego skryptu.
-Najpierw stwórzmy nowy plik w Pythonie.
-Dodajmy funkcję, która pobierze dane ze strony internetowej.
-Ten kod powinien działać automatycznie.
-Sprawdźmy, czy skrypt działa poprawnie.
-Jeśli pojawi się błąd, trzeba go naprawić.
-Dodajmy obsługę wyjątków w tym miejscu.
-Teraz spróbujmy uprościć ten fragment kodu.
-Ten fragment można zapisać krócej.
-Zróbmy pętlę, która wykona się kilka razy.
-Dodajmy warunek, który sprawdzi dane wejściowe.
-Funkcja powinna zwracać wynik.
-Zapiszmy wynik do pliku.
-Spróbujmy użyć biblioteki do parsowania HTML.
-Teraz pobierzmy tekst z elementu strony.
-Dodajmy małe opóźnienie między zapytaniami.
-Ten skrypt powinien działać w tle.
-Uruchommy program jeszcze raz.
-Sprawdźmy logi, żeby zobaczyć, co się stało.
-Ten kod można później rozbudować.
-Dodajmy konfigurację w osobnym pliku.
-Teraz kod wygląda czyściej.
-Przez API.
-Zróbmy test, żeby sprawdzić, czy wszystko działa.
-Ten projekt można wrzucić na GitHub.
-Teraz spróbujmy napisać bardziej zaawansowaną funkcję.
-Jest tam przycisk i możemy zobaczyć odpowiedzi.
-Stworzyłem ten projekt, żeby otrzymać softId.
-Myślałem, że to wystarczy, ale tak nie było.
-Bocie, teraz jestem w Ukrainie, w Charkowie.
-Nie mogę fizycznie pojechać do Polski.
-Mały zestaw ćwiczeń, który pomoże pisać poprawnie po polsku.
+1 Cześć bocie. Zróbmy kod, który wypisze w terminalu „Hello World”. Będziemy pisać w Pythonie. Pomóż mi go napisać.
+2 Sprawdź proszę, czy dobrze napisałem kod. Log dodałem poniżej. Czy są jakieś błędy, których nie zauważyłem? Bez zbędnych zmian w kodzie, proszę.
+3 Sprawdź, czy dobrze napisałem funkcję. Może da się to zrobić krócej w tym przypadku?
+4 Napisz kod, który sprawdza puste linie w pliku. Plik będzie w tym samym folderze co główny plik kodu, w formacie tekstowym.
+5 Jak myślisz, czy trzeba to ulepszać? Moim zdaniem chyba nie, ale chcę poznać twoją opinię o tym projekcie.
