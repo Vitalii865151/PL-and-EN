@@ -1,4 +1,4 @@
-1 Cześć bocie. Zróbmy kod, który wypisze w terminalu „Hello World”. Będziemy pisać w Pythonie. Pomóż mi go napisać.
+1 Cześć bocie. Zróbmy kod, który wypisze w terminalu "Hello World". Będziemy pisać w Pythonie. Pomóż mi go napisać.
 2 Sprawdź proszę, czy dobrze napisałem kod. Log dodałem poniżej. Czy są jakieś błędy, których nie zauważyłem? Bez zbędnych zmian w kodzie, proszę.
 3 Sprawdź, czy dobrze napisałem funkcję. Może da się to zrobić krócej w tym przypadku?
 4 Napisz kod, który sprawdza puste linie w pliku. Plik będzie w tym samym folderze co główny plik kodu, w formacie tekstowym.
